@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>IslamicPlays | Luxury Quran Experience</title>
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js">
+  </script>
+  <!-- Font Awesome for social icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ========== GLOBAL RESET & VARIABLES ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --gold: #d4af37;
+      --gold-light: #f9e076;
+      --deep-bg: #0b0805;
+      --card-bg: rgba(18, 13, 8, 0.5);
+      --glass-border: rgba(212, 175, 55, 0.25);
+      --royal-red: #b34444;
+      --text-soft: #f3ecd8;
+    }
+
+    body {
+      background: var(--deep-bg);
+      font-family: 'Cormorant Garamond', 'Times New Roman', 'Playfair Display', serif;
+      color: var(--text-soft);
+      overflow-x: hidden;
+      cursor: default;
+      scroll-behavior: smooth;
+      background-image: radial-gradient(ellipse at 50% 30%, rgba(180, 140, 60, 0.06) 0%, transparent 65%);
+    }
+
+    /* ========== LOADER SCREEN ========== */
+    #luxuryLoader {
+      position: fixed;
+      inset: 0;
+      background: #0a0603;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.9s ease, visibility 0.9s;
+    }
+
+    .loader-sticker {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.7));
+      animation: loaderFloat 2s infinite ease-in-out;
+      margin-bottom: 1.5rem;
+    }
+
+    @keyframes loaderFloat {
+      0% {
+        transform: translateY(0px) scale(1);
+      }
+      50% {
+        transform: translateY(-15px) scale(1.05);
+      }
+      100% {
+        transform: translateY(0px) scale(1);
+      }
+    }
+
+    .loader-brand {
+      font-size: 3rem;
+      font-weight: 700;
+      font-family: 'Cinzel', 'Times New Roman', serif;
+      background: linear-gradient(180deg, #fbe87a, #b8860b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 25px #b49450);
+      letter-spacing: 5px;
+      animation: loaderPulse 1.8s infinite;
+    }
+
+    @keyframes loaderPulse {
+      0% {
+        opacity: 0.5;
+        transform: scale(0.95);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.03);
+      }
+      100% {
+        opacity: 0.5;
+        transform: scale(0.95);
+      }
+    }
+
+    .loader-subtitle {
+      color: #d4af37;
+      margin-top: 0.8rem;
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      animation: loaderPulse 1.8s infinite;
+      animation-delay: 0.3s;
+    }
+
+    /* Luxury Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1a130a;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #d4af37, #8b6508);
+      border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.3);
+    }
+
+    /* Cursor Glow */
+    .cursor-glow {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      mix-blend-mode: screen;
+      transition: opacity 0.2s;
+    }
+
+    /* ========== TYPOGRAPHY ========== */
+    .gold-text {
+      background: linear-gradient(180deg, #f9e076 20%, #b38728 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ========== GLASSMORPHISM ========== */
+    .glass-card {
+      background: rgba(20, 13, 7, 0.45);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.7), inset 0 0 40px rgba(220, 180, 80, 0.08);
+      border-radius: 2.8rem;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      border-color: rgba(212, 175, 55, 0.55);
+      box-shadow: 0 35px 60px rgba(0, 0, 0, 0.8), inset 0 0 60px rgba(212, 175, 55, 0.12);
+      transform: translateY(-5px);
+    }
+
+    /* ========== NAVBAR ========== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 1.2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(8, 4, 1, 0.65);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+    }
+    .brand {
+      font-size: 2.5rem;
+      font-weight: 600;
+      letter-spacing: 6px;
+      background: linear-gradient(180deg, #fae37c, #b8860b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 30px #b49450);
+      font-family: 'Cinzel', 'Times New Roman', serif;
+    }
+
+    /* ========== BUBBLE SELECTOR ========== */
+    .bubble-container {
+      position: fixed;
+      top: 8rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 2.5rem;
+      z-index: 95;
+      background: rgba(10, 6, 2, 0.45);
+      backdrop-filter: blur(20px);
+      padding: 0.7rem 2.8rem;
+      border-radius: 60px;
+      border: 1px solid rgba(212, 175, 55, 0.55);
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.8);
+    }
+    .bubble-btn {
+      padding: 0.8rem 2.3rem;
+      border-radius: 50px;
+      background: rgba(22, 16, 10, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1.8px solid #d4af37;
+      color: #f5e7c6;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 0 28px rgba(212, 175, 55, 0.3);
+      animation: floatBubble 4.5s infinite ease-in-out;
+      font-size: 1.2rem;
+      white-space: nowrap;
+    }
+    .bubble-btn:nth-child(2) {
+      animation-delay: -2.2s;
+    }
+    @keyframes floatBubble {
+      0% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-12px);
+      }
+      100% {
+        transform: translateY(0px);
+      }
+    }
+    .bubble-btn.active {
+      background: rgba(212, 175, 55, 0.28);
+      border-color: #f9e076;
+      box-shadow: 0 0 65px #d4af37;
+      transform: scale(1.07);
+      color: #fff;
+    }
+
+    /* ========== HERO VIDEO ========== */
+    .hero-video-container {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+    }
+    video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.65);
+      transition: opacity 1.2s ease;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 40%, transparent 20%, rgba(6, 3, 1, 0.75) 90%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 10;
+    }
+    .main-title {
+      font-size: clamp(4rem, 12vw, 8rem);
+      font-weight: 600;
+      letter-spacing: 8px;
+      background: linear-gradient(180deg, #fbe87a, #b8860b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 55px #b49450);
+      margin-bottom: 1rem;
+    }
+
+    .bismillah-text {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-family: 'Cinzel', 'Times New Roman', serif;
+      background: linear-gradient(180deg, #f9e076 20%, #d4af37 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.8));
+      margin-top: 0.5rem;
+      letter-spacing: 3px;
+      animation: bismillahGlow 3s infinite ease-in-out;
+    }
+
+    @keyframes bismillahGlow {
+      0% {
+        filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.6));
+      }
+      50% {
+        filter: drop-shadow(0 0 50px rgba(212, 175, 55, 1));
+      }
+      100% {
+        filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.6));
+      }
+    }
+
+    /* ========== PRODUCT WRAPPERS ========== */
+    .product-wrapper {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    .product-wrapper.active {
+      display: block;
+      opacity: 1;
+    }
+    .section-spacing {
+      padding: 5rem 2.5rem;
+      max-width: 1450px;
+      margin: 0 auto;
+    }
+    .flex-layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3rem;
+      align-items: center;
+      justify-content: center;
+    }
+    .quran-image-float {
+      max-width: 360px;
+      filter: drop-shadow(0 40px 40px rgba(212, 175, 55, 0.55));
+      animation: softFloat 5.5s infinite alternate;
+      border-radius: 32px;
+    }
+    @keyframes softFloat {
+      0% {
+        transform: translateY(0px);
+      }
+      100% {
+        transform: translateY(-25px);
+      }
+    }
+
+    .price-tag {
+      font-size: 3.2rem;
+      font-weight: bold;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid #d4af37;
+      padding: 1rem 3rem;
+      border-radius: 100px;
+      display: inline-block;
+      color: #f7e05e;
+      margin: 2rem 0;
+    }
+
+    .ayat-block {
+      background: rgba(180, 130, 40, 0.07);
+      backdrop-filter: blur(18px);
+      border-radius: 3.5rem;
+      padding: 4rem 2rem;
+      margin: 4rem 0;
+      text-align: center;
+      font-size: 2.2rem;
+      border: 1px solid rgba(212, 175, 55, 0.35);
+    }
+
+    .whatsapp-cta {
+      background: #25D366;
+      border: none;
+      padding: 1.3rem 3.5rem;
+      border-radius: 60px;
+      font-weight: bold;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 0 45px #25D366;
+      transition: 0.3s;
+      letter-spacing: 1px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    /* ========== FOOTER ========== */
+    .premium-footer {
+      background: rgba(8, 4, 1, 0.8);
+      backdrop-filter: blur(35px);
+      border-top: 1px solid rgba(212, 175, 55, 0.4);
+      padding: 4rem 2rem 2rem;
+      margin-top: 5rem;
+      text-align: center;
+    }
+    .social-icons a {
+      color: #d4af37;
+      font-size: 2rem;
+      margin: 0 1.5rem;
+      transition: 0.4s;
+      display: inline-block;
+    }
+    .social-icons a:hover {
+      color: #fff;
+      text-shadow: 0 0 30px #d4af37;
+      transform: translateY(-5px);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+      .bubble-container {
+        gap: 1rem;
+        padding: 0.5rem 1.5rem;
+        top: 6.5rem;
+      }
+      .bubble-btn {
+        padding: 0.5rem 1.3rem;
+        font-size: 0.9rem;
+      }
+      .bismillah-text {
+        font-size: clamp(1.5rem, 4vw, 2.5rem);
+      }
+      .loader-sticker {
+        width: 90px;
+        height: 90px;
+      }
+      .loader-brand {
+        font-size: 2.2rem;
+      }
+    }
+.loader-emoji{
+  font-size: 6rem;
+  line-height: 1;
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 0 25px rgba(212,175,55,0.8));
+  animation: loaderFloat 2s infinite ease-in-out;
+  
+  background: linear-gradient(180deg,#fbe87a,#b8860b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+  </style>
+</head>
+<body>
+
+  <!-- ========== LUXURY LOADER ========== -->
+  <div id="luxuryLoader">
+    <div class="loader-emoji">☪</div>
+    <div class="loader-brand">IslamicPlays</div>
+    <p class="loader-subtitle">✦ LUXURY QURAN COLLECTION ✦</p>
+  </div>
+
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="brand">IslamicPlays</div>
+    <div style="color:#d4af37; letter-spacing:3px;">Luxury Collection</div>
+  </nav>
+
+  <!-- Bubble Selector -->
+  <div class="bubble-container">
+    <div class="bubble-btn active" id="bubbleQuran1">✨ Premium Quran I</div>
+    <div class="bubble-btn" id="bubbleQuran2">👑 Royal Quran II</div>
+  </div>
+
+  <!-- Hero Video -->
+  <div class="hero-video-container">
+    <video id="heroVideo" src="quran1.mp4" autoplay muted loop playsinline></video>
+    <div class="hero-overlay">
+      <h1 class="main-title">IslamicPlays</h1>
+      <p style="font-size:2rem; color:#e6d5a8; text-shadow:0 0 30px black;">Luxury Quran Collection by Dr. Israr Ahmed</p>
+      <p class="bismillah-text">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</p>
+    </div>
+  </div>
+
+  <!-- ========== QURAN 1 LONG CONTENT ========== -->
+  <div id="wrapperQuran1" class="product-wrapper active">
+    <div class="section-spacing">
+      <div class="flex-layout glass-card" style="padding:3rem;">
+        <div style="flex:1;">
+          <h2 style="font-size:3rem;" class="gold-text">Asan Tarjuma Quran – Black & Gold Edition</h2>
+          <p style="font-size:1.6rem;">Dr. Israr Ahmed</p>
+          <p style="max-width:550px;">Best contribution to learning Quran. Short comprehensive Tafseer.</p>
+          <div class="price-tag">Rs. 2,500</div>
+          <p>✨ Free Digital Counter · Free Gulaf Quran Cover</p>
+          <button class="whatsapp-cta" onclick="orderWhatsApp('923006264072','Asan Tarjuma Quran')">Order on WhatsApp</button>
+        </div>
+        <img src="1.png" alt="Quran 1" class="quran-image-float">
+      </div>
+
+      <div class="ayat-block">
+        ﴿ إِنَّ هَٰذَا الْقُرْآنَ يَهْدِي لِلَّتِي هِيَ أَقْوَمُ ﴾<br>
+        <span style="font-size:1.4rem;">"Indeed, this Qur'an guides to that which is most upright." (17:9)</span>
+      </div>
+
+      <div class="feature-grid">
+        <div class="glass-card" style="padding:2rem;">Premium Hardcover</div>
+        <div class="glass-card" style="padding:2rem;">Easy Urdu Translation</div>
+        <div class="glass-card" style="padding:2rem;">Elegant Arabic Typography</div>
+        <div class="glass-card" style="padding:2rem;">High Quality Printing</div>
+        <div class="glass-card" style="padding:2rem;">Luxury Finish</div>
+        <div class="glass-card" style="padding:2rem;">Perfect Islamic Gift</div>
+      </div>
+
+      <!-- Additional sections for Quran 1 -->
+      <div style="margin:4rem 0;">
+        <h3 class="gold-text" style="font-size:2.2rem;">Why Choose This Quran</h3>
+        <div class="glass-card" style="padding:2rem; margin-top:1rem;">Carefully crafted for spiritual readers seeking clarity and elegance.</div>
+      </div>
+      <div style="margin:4rem 0;">
+        <h3 class="gold-text" style="font-size:2.2rem;">Customer Reviews</h3>
+        <div class="flex-layout" style="gap:2rem;">
+          <div class="glass-card" style="padding:2rem;">⭐️⭐️⭐️⭐️⭐️ "Beautiful translation, very premium feel."</div>
+          <div class="glass-card" style="padding:2rem;">⭐️⭐️⭐️⭐️⭐️ "Best gift for my family."</div>
+        </div>
+      </div>
+      <div class="glass-card" style="padding:2rem; margin:3rem 0;">
+        <h4>📦 Delivery & Packaging</h4>
+        <p>Secure packaging with luxury unboxing experience. Delivery across Pakistan.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== QURAN 2 LONG CONTENT ========== -->
+  <div id="wrapperQuran2" class="product-wrapper">
+    <div class="section-spacing">
+      <div class="flex-layout glass-card" style="padding:3rem; border-color:#c44b4b;">
+        <div style="flex:1;">
+          <h2 style="font-size:3rem; color:#e6b422;">Luxury Red Quran Translation Edition</h2>
+          <p style="font-size:1.6rem;">ڈاکٹر اسرار احمد</p>
+          <p>آسان ترجمہ قرآن، مختصر تفسیر، 1200+ صفحات۔</p>
+          <div class="price-tag">Rs. 3,500</div>
+          <p>✨ Free Digital Counter · Free Gulaf Cover</p>
+          <button class="whatsapp-cta" onclick="orderWhatsApp('923006264072','Luxury Red Quran')">Order on WhatsApp</button>
+        </div>
+        <img src="2.png" alt="Quran 2" class="quran-image-float">
+      </div>
+
+      <div class="ayat-block" style="background:rgba(180,70,70,0.12);">
+        ﴿ وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ ﴾<br>
+        <span>"And We send down the Qur'an that which is healing and mercy."</span>
+      </div>
+
+      <div class="feature-grid">
+        <div class="glass-card" style="padding:2rem;">مکمل قرآن پاک (30 پارے)</div>
+        <div class="glass-card" style="padding:2rem;">1200+ صفحات</div>
+        <div class="glass-card" style="padding:2rem;">Imported Matt Paper</div>
+        <div class="glass-card" style="padding:2rem;">Two Colour Printing</div>
+        <div class="glass-card" style="padding:2rem;">واضح پرنٹنگ</div>
+        <div class="glass-card" style="padding:2rem;">ڈاکٹر اسرار احمد رحمۃ اللہ</div>
+      </div>
+
+      <div style="margin:4rem 0;">
+        <h3 style="color:#e6b422; font-size:2.2rem;">Premium Islamic Gift</h3>
+        <div class="glass-card" style="padding:2rem;">Perfect for loved ones seeking deep Quranic understanding.</div>
+      </div>
+      <div class="glass-card" style="padding:2rem; margin:3rem 0;">
+        <h4>🚚 Quality Guarantee</h4>
+        <p>Delivered with care and premium packaging.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Premium Footer -->
+  <footer class="premium-footer">
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-youtube"></i></a>
+      <a href="#"><i class="fab fa-facebook"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+    </div>
+    <p style="color:#d4af37; margin:1.5rem 0;">© IslamicPlays - Luxury Quran Store</p>
+    <p style="color:#b49450;">WhatsApp: +92 300 6264072</p>
+  </footer>
+
+  <script>
+    (function() {
+      // ========== LOADER LOGIC ==========
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          const loader = document.getElementById('luxuryLoader');
+          loader.style.opacity = '0';
+          loader.style.visibility = 'hidden';
+          // Remove loader from DOM after transition
+          setTimeout(function() {
+            loader.style.display = 'none';
+          }, 900);
+        }, 2500);
+      });
+
+      const bubble1 = document.getElementById('bubbleQuran1');
+      const bubble2 = document.getElementById('bubbleQuran2');
+      const video = document.getElementById('heroVideo');
+      const wrapper1 = document.getElementById('wrapperQuran1');
+      const wrapper2 = document.getElementById('wrapperQuran2');
+      const cursorGlow = document.getElementById('cursorGlow');
+      let current = 'quran1';
+      const videos = {
+        quran1: 'quran1.mp4',
+        quran2: 'quran2.mp4'
+      };
+
+      function switchTo(quranId) {
+        if (current === quranId) return;
+        current = quranId;
+        bubble1.classList.remove('active');
+        bubble2.classList.remove('active');
+        if (quranId === 'quran1') bubble1.classList.add('active');
+        else bubble2.classList.add('active');
+
+        gsap.to(video, {
+          opacity: 0,
+          duration: 0.5,
+          onComplete: () => {
+            video.src = videos[quranId];
+            video.play();
+            gsap.to(video, {
+              opacity: 1,
+              duration: 0.9
+            });
+          }
+        });
+
+        if (quranId === 'quran1') {
+          wrapper2.classList.remove('active');
+          wrapper1.classList.add('active');
+          gsap.fromTo(wrapper1, {
+            opacity: 0,
+            y: 25
+          }, {
+            opacity: 1,
+            y: 0,
+            duration: 0.7
+          });
+        } else {
+          wrapper1.classList.remove('active');
+          wrapper2.classList.add('active');
+          gsap.fromTo(wrapper2, {
+            opacity: 0,
+            y: 25
+          }, {
+            opacity: 1,
+            y: 0,
+            duration: 0.7
+          });
+        }
+      }
+
+      bubble1.addEventListener('click', () => switchTo('quran1'));
+      bubble2.addEventListener('click', () => switchTo('quran2'));
+
+      document.addEventListener('mousemove', (e) => {
+        gsap.to(cursorGlow, {
+          x: e.clientX,
+          y: e.clientY,
+          duration: 1,
+          ease: 'power2.out'
+        });
+      });
+
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.utils.toArray('.glass-card, .ayat-block, .quran-image-float, .feature-grid > div').forEach(el => {
+        gsap.fromTo(el, {
+          opacity: 0,
+          y: 55,
+          scale: 0.94
+        }, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1.3,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 88%',
+            toggleActions: 'play none none reverse'
+          }
+        });
+      });
+
+      window.orderWhatsApp = function(num, product) {
+        window.open(
+          `https://wa.me/${num}?text=Assalamu%20Alaikum!%20I%20want%20to%20order%20${encodeURIComponent(product)}%20from%20IslamicPlays.`,
+          '_blank');
+      };
+    })();
+  </script>
+</body>
+</html>
